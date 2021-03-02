@@ -3,7 +3,7 @@
   <myhead></myhead>
   <div class="breadcrumbwrap">
     <div class="wrap pos-rlt">
-      <el-breadcrumb separator="/">
+      <el-breadcrumb separator="/" class="user-i-bread">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/user' }">账户中心</el-breadcrumb-item>
         <el-breadcrumb-item>账户中心</el-breadcrumb-item>
@@ -51,12 +51,12 @@
         <ul class="infoform">
           <li><span class="fr pointer" @click="open"><el-avatar :size="30" :src="userInfo.user_image" class="v-middle fl m-r-md"></el-avatar></span>头像</li>
           <li><span class="fr text-gray">{{userInfo.phone}}</span>手机号</li>
-          <li><div class="fr text-gray"><el-input v-model="name.real_name" value="sss"></el-input></div>账户名</li>
+          <li><span class="fr text-gray">{{userInfo.user_name}}</span>账户名</li>
           <li><span class="fr text-gray"></span>性别</li>
         </ul>
 
         <div class="m-t-md">
-          <el-button type="danger" class="w-full" native-type="submit">保存</el-button>
+          <el-button type="danger" class="w-full" @click="open">下载APP修改信息</el-button>
         </div>
       </form>
     </div>
@@ -143,6 +143,12 @@
 </script>
 
 <style lang="less">
+	.user-i-bread {
+	  span { color:#fff !important;; font-size: 12px;}
+	  .el-breadcrumb__inner { color: #eee;}
+	}
+</style>
+<style lang="less" scoped>
   .breadcrumbwrap { padding: 10px 0; line-height:24px; background:#333;
       .el-breadcrumb__item {
         span { color:#fff; font-size: 12px;}

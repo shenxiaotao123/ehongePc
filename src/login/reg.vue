@@ -23,8 +23,8 @@
 
             </el-tabs>
             <div class="size12 m-t-md text-gray">
-              <span class="fl" @click="open">忘记登录密码？</span>
-              <span class="fr" @click="$router.push({path:'/login'})">已有账号？立即登录</span>
+              <span class="fl pointer" @click="open">忘记登录密码？</span>
+              <span class="fr pointer" @click="$router.push({path:'/login'})">已有账号？立即登录</span>
             </div>
           </div>
        </div>
@@ -76,11 +76,11 @@
                 // success callback
                 var code = response.data.code
                 if(code==0){ //注册成功
-                  alert(response.data.msg)//接口返回信息
+                  this.$message.error(response.data.msg)//接口返回信息
                   this.$router.push({path:'/login'})
                 }
                 else{
-                  alert(response.data.msg)//接口返回信息
+                  this.$message.error(response.data.msg)//接口返回信息
                 }
                 console.log(response);
               }, (response) => {
@@ -90,24 +90,27 @@
             },
         // 获取验证码
         ObtainCode () {
-              this.sendCode = false  // 控制显示隐藏
-              this.authTime = 60
-              let timeInt = setInterval(() => {
-                this.authTime--
-                if (this.authTime <= 0) {
-                  this.sendCode = true
-                  window.clearInterval(timeInt)
-                }
-              }, 1000)
-
               var Cparams= {
                 'phone' : this.sms.username,
                 'type' : 'oAuth',
               };
               var Captcha = Cparams; // 这里才是你的表单数据
               this.$ajax.post('consumer/getTelCode', Captcha).then((response) => {
-                // success callback
-                console.log(response);
+                var codedata = response.data.code
+                if(codedata == 0){
+                	this.sendCode = false  // 控制显示隐藏
+                	this.authTime = 60
+                	let timeInt = setInterval(() => {
+                	  this.authTime--
+                	  if (this.authTime <= 0) {
+                	    this.sendCode = true
+                	    window.clearInterval(timeInt)
+                	  }
+                	}, 1000)
+                }
+                if(codedata == 1){
+                	this.$message.error(response.data.msg);
+                }
               }, (response) => {
                 // error callback
                 console.log(error);
@@ -128,7 +131,7 @@
 </script>
 
 <style lang="less">
-  .login { height: 500px; background: url("~@/assets/img/login/regBg.jpg") no-repeat center;
+  .login { height: 500px; background: url("~@/assets/img/login/bg.jpg") no-repeat center;
     .loginForm { position: absolute; left:50%; top: 50px; margin-left: 240px; padding: 20px 30px 30px 30px; width: 300px; background-color: #fff; border-radius:5px; box-shadow: #eee 10px 10px 0;
       .Code { position: absolute !important; right: 25px; top:0;}
       .el-tabs__item { height: 50px; line-height: 50px; font-size: 16px; font-weight: 700;}

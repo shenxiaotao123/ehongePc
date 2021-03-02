@@ -27,15 +27,7 @@
       </div>
 
 
-      <p>
-
-        <span style="font-size: 4.1vw;"></span> &nbsp;&nbsp;
-        <span class="gray"></span>
-        <span class="right commentGood">&nbsp;好评</span>
-        &nbsp;中评</span><span class="right commentbad" >&nbsp;差评
-      </span>
-      </p>
-      <p class="all" style="padding-top: 3vw;"></p>
+  
     </div>
   </div>
   <!--没有评价的情况-->
@@ -88,9 +80,6 @@
   .noComment { text-align: center; color: #999;
       img { margin-top: 30px;}
   }
-  .commentbad{ width: 12.5vw; text-align: right;  background-repeat: no-repeat;  background-image: url("~@/assets/img/components/bad.png"); background-size: contain; color: #666666; }
-  .commentMedium{ width: 12.5vw; text-align: right; background-repeat: no-repeat; background-image: url("~@/assets/img/components/medium.png"); background-size: 34%; color: #FF7E00;}
-  .comment p img{ width: 7vw;}
-  .comment{ clear: both; border-bottom: 1px solid #eee; padding: 5vw 0;}
+
 
 </style>

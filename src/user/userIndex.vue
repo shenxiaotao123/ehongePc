@@ -3,7 +3,7 @@
   <myhead></myhead>
   <div class="breadcrumbwrap">
     <div class="wrap pos-rlt">
-      <el-breadcrumb separator="/">
+      <el-breadcrumb separator="/" class="user-i-bread">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>账户中心</el-breadcrumb-item>
       </el-breadcrumb>
@@ -26,9 +26,9 @@
   </div>
   <div class="wrap userTab">
     <template>
-      <el-tabs v-model="activeNameUser" @tab-click="handleClick">
+      <el-tabs v-model="activeNameUser" @tab-click="handleClick" class="m-t-sm">
         <el-tab-pane label="专栏" name="Column">
-			<div class="wrapper-sm">
+		
 					<div v-for="colr in column">
 						<div class="headline-news">
 							<div class="newslistbox">
@@ -55,7 +55,7 @@
 							</div>
 						</div>
 					</div>
-			</div>
+	
         </el-tab-pane>
         
         <el-tab-pane label="短视频" name="video">
@@ -109,9 +109,13 @@
 		downloadApp
       },
       mounted() {
-        document.cookie
+        document.cookies
         var token = this.$cookies.get("token")
         this.tokenData = token
+		if(token == 'undefined'){
+		   alert('您尚未登录，请先登录');
+		   this.$router.push({path:'/login'})
+		}
 		
         var tokenData= {
           'user_token' : this.tokenData
@@ -193,14 +197,17 @@
 </script>
 
 <style lang="less">
+	.user-i-bread {
+	  span { color:#fff !important;; font-size: 12px;}
+	  .el-breadcrumb__inner { color: #eee;}
+	}
+</style>
+<style lang="less" scoped>
   .userTab {
 	  .el-tabs__nav-wrap::after { background-color: #fff;}
   }
   .breadcrumbwrap { padding: 10px 0; line-height:24px; background:#333;
-      .el-breadcrumb__item {
-        span { color:#fff; font-size: 12px;}
-        .el-breadcrumb__inner { color: #eee;}
-      }
+      
       .breadcrumbpic { position:absolute; bottom: -12px; right:0; width:342px; height:68px;}
     }
     .userTop { height: 140px; background: url("~@/assets/img/user/bg.jpg") repeat-x;

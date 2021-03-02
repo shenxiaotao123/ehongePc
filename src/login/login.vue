@@ -56,13 +56,6 @@
         comment,
         downloadApp
       },
-      created() {
-
-
-            },
-      mounted() {
-
-      },
       methods: {
         //短信登录
         onSubmit() {
@@ -74,20 +67,22 @@
               };
               var formData = params; // 这里才是你的表单数据
               this.$ajax.post('consumer/login', formData).then((response) => {
-                // success callback
-                //alert(response.data.msg)//接口返回信息
-                //console.log(response);
-                //沒有token的情況
                   this.$cookies.isKey('token')
-                  console.log('没有token')
                   this.$cookies.set('token', response.data.data.token,60*60*24*30)
-                  this.$cookies.set('ykj_name', response.data.data.real_name,60*60*24*30)
+                  this.$cookies.set('ykj_name', response.data.data.ykj_name,60*60*24*30)
                   this.$cookies.set('user_image', response.data.data.user_image,60*60*24*30)
-                  console.log(response.data.data.token)
-                  document.cookie
-                  var realname = this.$cookies.get("real_name")
-                  this.realnameData = realname
-                  this.$router.push({path:'/userIndex'})
+                  //console.log(response.data.data.token)
+                  //document.cookie
+                  // var realname = this.$cookies.get("ykj_name")
+                  // this.realnameData = realname
+				  var codedata = response.data.code
+				  if(codedata == 0){
+					this.$router.push({path:'/userIndex'})
+				  }
+				  if(codedata == 1){
+					this.$message.error(response.data.msg);
+				  }
+                  
               }, (response) => {
                 // error callback
                 console.log(error);
@@ -95,24 +90,27 @@
             },
         // 获取验证码
         ObtainCode () {
-              this.sendCode = false  // 控制显示隐藏
-              this.authTime = 60
-              let timeInt = setInterval(() => {
-                this.authTime--
-                if (this.authTime <= 0) {
-                  this.sendCode = true
-                  window.clearInterval(timeInt)
-                }
-              }, 1000)
-
               var Cparams= {
                 'phone' : this.sms.username,
                 'type' : 'oAuth',
               };
               var Captcha = Cparams; // 这里才是你的表单数据
               this.$ajax.post('consumer/getTelCode', Captcha).then((response) => {
-                // success callback
-                console.log(response);
+                var codedata = response.data.code
+                if(codedata == 0){
+                	this.sendCode = false  // 控制显示隐藏
+                	this.authTime = 60
+                	let timeInt = setInterval(() => {
+                	  this.authTime--
+                	  if (this.authTime <= 0) {
+                	    this.sendCode = true
+                	    window.clearInterval(timeInt)
+                	  }
+                	}, 1000)
+                }
+                if(codedata == 1){
+                	this.$message.error(response.data.msg);
+                }
               }, (response) => {
                 // error callback
                 console.log(error);

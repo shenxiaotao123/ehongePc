@@ -9,14 +9,14 @@
 				<span class="fl">当前位置：</span>
 				<el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
 				<el-breadcrumb-item><a @click="$router.push({path:'/videolist'})">百家讲坛</a></el-breadcrumb-item>
-				<el-breadcrumb-item>详情页</el-breadcrumb-item>
+				<el-breadcrumb-item>视频</el-breadcrumb-item>
 		   </el-breadcrumb>
 		   </div>
 		   <div class="bannerTetx">
 				{{videoDetail.title}}
-				<div class="m-t-md size14 text-darkgray">
+				<div class="m-t-xs size14 text-darkgray fr font-thin">
 					<img width="30" height="30" :src="videoUser.user_image" class="v-middle rounded" />
-					<span class="m-l-sm v-middle">{{videoUser.user_name}}</span>
+					<span class="m-l-xs v-middle">{{videoUser.user_name}}</span>
 					<span class="m-l-sm v-middle text-mainColor" @click="favorites">+收藏此视频</span>
 				</div>
 		   </div>	    
@@ -24,25 +24,45 @@
 		 
    </div>
 
-   <div class="wrap">
-
-		   <template>
-		      <video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"></video-player>
-		   </template>
+   <div class="wrap m-t">
+		<div class="play-left">
+			<template>
+				<video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"></video-player>
+			</template>
 		
-		<div class="comment bg-ff wrapper-md m-t-sm">
-			<h3>评论 ( {{videoComment.count}} )</h3>
-			
-			<div id="noComment">这里还没有人评论</div>
-			<div class="commentList" v-for="videoCom of videoComment.data">
-				<div class="commentAvatar">
-					<img width="18" height="18" :src="videoCom.comment_user_image" class="v-middle" />
-				<span class="m-l-xs v-middle size12">{{videoCom.comment_user_name}}</span></div>
-				<p class="commentCon">{{videoCom.com_content}}</p>
-				<p class="size12 text-gray">04-09{{videoCom.created_at}}</p>
+			<div class="comment bg-ff wrapper-md m-t-sm">
+				<h3>评论 ( {{videoComment.count}} )</h3>
+					
+				<div id="noComment">这里还没有人评论</div>
+				<div class="commentList" v-for="videoCom of videoComment.data">
+					<div class="commentAvatar">
+						<img width="18" height="18" :src="videoCom.comment_user_image" class="v-middle rounded" />
+						<span class="m-l-xs v-middle size12 text-gray">{{videoCom.comment_user_name}}</span>
+					</div>
+					<p class="commentCon">{{videoCom.com_content}}</p>
+					<p class="size12 text-gray">发表于 {{videoCom.created_at}}</p>
+				</div>
+			</div>	
+		</div>
+		<div class="play-right">
+			<div class="videoData">
+				<dl>
+					<dt>{{videoCon.view_num}}</dt>
+					<dd>浏览</dd>
+				</dl>
+				<dl>
+					<dt>{{videoCon.like_num}}</dt>
+					<dd>点赞</dd>
+				</dl>
+				<dl>
+					<dt>{{videoCon.collect_num}}</dt>
+					<dd>收藏</dd>
+				</dl>
 			</div>
-		</div>	
-		
+	
+			<p class="text-c"><el-button type="danger" round  @click="open">发布短视频</el-button></p>
+			<p class="size12 text-gray m-t"><i class="fa fa-exclamation-circle m-r-xs"></i>严禁上传违规违法/色情色诱/低俗/广告等视频内容，违者下架视频并封号处理</p>
+		</div>
    </div>
    <myfooter></myfooter>
  </div>
@@ -55,9 +75,9 @@ require('vue-video-player/src/custom-theme.css')
 Vue.use(VideoPlayer)
 import Vue from 'vue';
 
-
   import myhead from '@/components/myhead'
   import myfooter from '@/components/myfooter'
+  import downloadApp from '@/public/downloadApp' //弹出框APP引导
   
     export default {
         name: "play",
@@ -69,6 +89,7 @@ import Vue from 'vue';
 			videoComment:[],
 			videoUser:[],
 			collect:[],
+			videoCon:[],
 			playerOptions : {
 			        playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
 			        autoplay: false, //如果true,浏览器准备好时开始回放。
@@ -97,6 +118,7 @@ import Vue from 'vue';
         components: {
           myhead,
           myfooter,
+		  downloadApp
         },
       mounted() {
         this.$ajax.get('info/video/' + this.$route.query.id).then((response) => { //视频列表
@@ -114,7 +136,6 @@ import Vue from 'vue';
 				noc.style.display = 'block';
 			}
 		});	
- 
       },
       methods: {
         open() {
@@ -144,6 +165,12 @@ import Vue from 'vue';
 					    type: 'warning'
 					});
 				}
+				if(clocode==99){
+					this.$message({
+					    message: '您还未登录，请先登录再收藏',
+					    type: 'warning'
+					});
+				}
 				if(clocode==0){
 					this.$message({
 					    message: '收藏成功！',
@@ -160,8 +187,9 @@ import Vue from 'vue';
 
 <style lang="less" scoped>
   @mian-color: #0c3052;
-  .banner { height: 200px; background:url("~@/assets/img/video/banner.jpg") no-repeat center top;
-	.bannerTetx { padding-top: 20px; text-align: center; color:#333; font-size: 32px; font-weight: 700;}
+  .banner {  
+	// background:url("~@/assets/img/video/banner.jpg") no-repeat center top;
+	.bannerTetx { color:#333; font-size: 28px; font-weight: 700;}
 	
   }
 
@@ -173,4 +201,16 @@ import Vue from 'vue';
 	}
 }
 #noComment { padding: 30px 0; display: none; color:#999; text-align: center;}
+ .play-left { float: left; width: 910px;
+	
+ }
+ .play-right { padding: 20px; float: right; width: 240px; background-color: #fff;
+	h3 { font-size: 14px;}
+	.videoData { padding: 10px 0 30px 0;
+		&:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
+		dl { float: left; width: 33.33%; text-align: center;
+			dd { font-size: 12px;}
+		}
+	}
+ }
 </style>

@@ -6,8 +6,8 @@
 		<div class="carousel wrap pos-rlt">
 		  <template>
 			<el-carousel :interval="5000" arrow="always" height="500px">
-			  <el-carousel-item>
-				<h3><el-image src="https://www.ehonge.com/Radmin/Uploads/20190610/5cfe20e2d2bda.png" @click="$router.push({path:tt.url})"></el-image></h3>
+			  <el-carousel-item v-for="caro in carousel">
+				<h3><el-image :src="caro.pc_pic_url" @click="$router.push({path:caro.url})"></el-image></h3>
 			  </el-carousel-item>
 			</el-carousel>
 		  </template>
@@ -154,6 +154,7 @@ export default {
 	  columnRecommend:[],
 	  column:[],
 	  hashtag:[],
+	  carousel:[]
     }
   },
   components: {
@@ -162,9 +163,12 @@ export default {
     downloadApp
   },
   mounted() {
+   this.$ajax.get('index/ads').then((response) => { //首页轮播图
+       this.carousel = response.data.data.pc_index
+   });
    this.$ajax.get('shop/category').then((response) => { //商品分类列表
        this.category = response.data.data
-		// console.log(response.data.data);
+   		// console.log(response.data.data);
    });
    this.$ajax.get('info/video' + '?itemsPerLoad=4').then((response) => { //视频列表-百家讲坛
        this.videoList = response.data.data.data
@@ -300,7 +304,7 @@ export default {
   	  }
   }
   //热门专栏
- .headline-news { float:left; display:block; width:580px; background-color: #fff; border-radius: 5px; overflow:hidden;
+ .headline-news { float:left; display:block; width:560px; background-color: #fff; border-radius: 5px; overflow:hidden;
   		.news-Pic { height:280px;}
   		.news-title { margin: 0 auto; width:500px; color:#333; height:50px; line-height:50px; font-size:18px; text-align:center; overflow: hidden; text-overflow:ellipsis; white-space: nowrap;
   			&:hover { color:@miam-color;}
